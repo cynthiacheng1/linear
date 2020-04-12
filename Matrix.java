@@ -69,5 +69,20 @@ public class Matrix {
     B.printMatrix();
     Matrix C = A.addMatrix(B);
     C.printMatrix();
+    Scanner in = new Scanner(System.in);
+    int userRows, userCols, userData;
+    System.out.println("please enter the number of rows for your Matrix");
+    userRows = in.nextInt();
+    System.out.println("please enter the number of columns");
+    userCols = in.nextInt();
+    Matrix D = new Matrix(userRows, userCols);
+    for (int i = 0; i < userRows; i++){
+      for (int j = 0; j < userCols; j++){
+        System.out.println("Enter value for matrix at row: "+i+" and column: "+j+" :");
+    		userData = in.nextInt();
+    		D.matrixArr[i][j] = userData;
+      }
+    }
+    D.printMatrix();
   }
 }

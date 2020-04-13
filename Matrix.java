@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Matrix {
   public int row;
   public int col;
-  private int[][] matrixArr;
+  private int[][] arr;
 
   public Matrix(){
     this(0,0);
@@ -16,10 +16,10 @@ public class Matrix {
   public Matrix(int m, int n){
     this.row = m;
     this.col = n;
-    this.matrixArr = new int[m][n];
+    this.arr = new int[m][n];
     for (int i = 0; i < this.row; i++){
       for (int j = 0; j < this.col; j++){
-        this.matrixArr[i][j] = 0;
+        this.arr[i][j] = 0;
       }
     }
   }
@@ -28,10 +28,10 @@ public class Matrix {
     //can be broken if someone inputs a 2d array which has a diff number of elements in each row
     this.row = arr.length;
     this.col = arr[0].length;
-    this.matrixArr = new int[this.row][this.col];
+    this.arr = new int[this.row][this.col];
     for (int i = 0; i < this.row; i++){
       for (int j = 0; j < this.col; j++){
-        this.matrixArr[i][j] = arr[i][j];
+        this.arr[i][j] = arr[i][j];
       }
     }
   }
@@ -39,7 +39,7 @@ public class Matrix {
   public void printMatrix(){
     for (int i = 0; i < this.row; i++){
       for (int j = 0; j < this.col; j++){
-        System.out.print(this.matrixArr[i][j] + "  ");
+        System.out.print(this.arr[i][j] + "  ");
       }
       System.out.println();
     }
@@ -52,7 +52,7 @@ public class Matrix {
       Matrix finalMatrix = new Matrix(this.row, this.col);
       for (int i = 0; i < this.row; i++){
         for (int j = 0; j < this.col; j++){
-          finalMatrix.matrixArr[i][j] = this.matrixArr[i][j] + other.matrixArr[i][j];
+          finalMatrix.arr[i][j] = this.arr[i][j] + other.arr[i][j];
         }
       }
       return finalMatrix;
@@ -64,7 +64,7 @@ public class Matrix {
     Matrix resMatrix = new Matrix(this.row, this.col);
     for (int i = 0; i < this.row; i++){
       for (int j = 0; j < this.col; j++){
-        resMatrix.matrixArr[i][j] = this.matrixArr[i][j] * num;
+        resMatrix.arr[i][j] = this.arr[i][j] * num;
       }
     }
     return resMatrix;
@@ -74,9 +74,31 @@ public class Matrix {
     return add(other.scalarMult(-1));
   }
 
+  public Matrix mult(Matrix other){
+    if (this.col == other.row){
+      Matrix resMatrix = new Matrix(this.row, other.col);
+      for (int i = 0; i < this.row; i++){
+        for (int j = 0; j < this.col; j++){
+          resMatrix.arr[i][j] = multCell(this, other, i, j);
+        }
+      }
+      return resMatrix;
+    }
+    return null;
+  }
+
+  private int multCell(Matrix first, Matrix second, int row, int col){
+    int cell = 0;
+    for (int i = 0; i < second.arr.length; i++) {
+        cell += first.arr[row][i] * second.arr[i][col];
+    }
+    return cell;
+  }
+
+
+
 //matrix function which involves scanner - interaction between user
   public static void main(String[] args) {
-
     Matrix A = new Matrix(3,3);
     A.printMatrix();
 
@@ -90,6 +112,9 @@ public class Matrix {
     Matrix D = A.sub(B);
     D.printMatrix();
 
+    Matrix F = B.mult(B);
+    F.printMatrix();
+
     Scanner in = new Scanner(System.in);
     int userRows, userCols, userData;
     System.out.println("please enter the number of rows for your Matrix");
@@ -101,7 +126,7 @@ public class Matrix {
       for (int j = 0; j < userCols; j++){
         System.out.println("Enter value for matrix at row "+(i+1)+" and column "+(j+1)+" ");
     		userData = in.nextInt();
-    		E.matrixArr[i][j] = userData;
+    		E.arr[i][j] = userData;
       }
     }
     E.printMatrix();

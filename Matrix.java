@@ -4,6 +4,7 @@ public class Matrix {
 	public int row;
 	public int col;
 	private int[][] arr;
+	private int deleteRow;
 
 	public Matrix() {
 		this(0, 0);
@@ -46,9 +47,13 @@ public class Matrix {
 		}
 		System.out.println();
 	}
-	
+
 	public int getElement(int row, int col) {
 		return arr[row][col];
+	}
+
+	public int getDeleteRow() {
+		return deleteRow;
 	}
 
 	// idea override '+' operation
@@ -99,4 +104,39 @@ public class Matrix {
 		}
 		return cell;
 	}
+
+	// returns a one row matrix at index of inputted int
+	public Matrix getRow(int rows) {
+		int[][] result = new int[1][col];
+		for (int i = 0; i < col; i++) {
+			result[0][i] = arr[rows][i];
+		}
+		return new Matrix(result);
+	}
+
+	// checks if element at given row and col is 0
+	public boolean is0(int rows, int cols) {
+		if (arr[rows][cols] == 0) {
+			return true;
+		}
+		return false;
+	}
+
+	// returns scaler needed to multiply by row deleteRow to set inputted row and column to 0
+	public int find0Scaler(int rows, int cols) {					
+		for (int i = 0; i < rows; i++) {// Goes through every row besides inputted row
+			if (i != rows) {
+				for (int j = 1000; j > -1000; j--) {// multiplies each row with scaler between -1000 and 1000 and adds
+								// that row to given row to see if given element is 0
+					if ((this.getRow(rows).add(this.getRow(i).scalarMult(j))).is0(0, cols) && j != 0) {
+						deleteRow = i; //row that needs to be multiplied
+						return j; //scaler to multiply
+						//use these to create inverse and for GI
+					}
+				}
+			}
+		}
+		return 0;
+	}
+
 }

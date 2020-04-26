@@ -184,6 +184,16 @@ public class Matrix {
 		}
 	}
 
+	private boolean rowEqZero(int row1){
+		boolean equalsZero = true;
+		for (int i =0; i< this.row; i++){
+			if ((int) this.arr[row1][i] != 0 ){
+				equalsZero = false;
+			}
+		}
+		return equalsZero;
+	}
+
 	public Matrix inverse(){
 		Matrix fin = new Matrix(this.row, true);
 		for (int i =0; i < this.col; i++){
@@ -214,6 +224,11 @@ public class Matrix {
 				// this.printMatrix();
 			}
 		}
+		for (int i =0; i < this.row; i++){
+			if (rowEqZero(i) == true){
+				return null;
+			}
+		}
 		for (int i = 0; i < this.row; i++){
 			//System.out.println(this.arr[i][i]);
 			if (this.arr[i][i] != 1){
@@ -228,8 +243,9 @@ public class Matrix {
 
 
 	public static void main(String args[]){
-		double[][] randomInts = {{1,0,1},{0,2,1},{1,1,1}};
-		//double[][] randomInts = {{1,2,3},{1,2,3},{4,5,6}};
+		//double[][] randomInts = {{2,-1,0},{-1,2,-1},{0,-1,2}};
+		//double[][] randomInts = {{1,0,1},{0,2,1},{1,1,1}};
+		double[][] randomInts = {{1,2,3},{1,2,3},{4,5,6}};
 		//double[][] randomInts = {{1,2,5,3},{1,5,7,3},{31,5,6,8},{4,5,6,7}};
 
     Matrix A = new Matrix(randomInts);

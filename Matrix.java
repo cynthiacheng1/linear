@@ -162,7 +162,7 @@ public class Matrix {
 		//if x = 0 need to switch the order of rows around
 		double x = this.arr[row1][col];
 		double y = this.arr[row2][col];
-		this.printMatrix();
+		// this.printMatrix();
 		// System.out.println("x val: " + x);
 		// System.out.println("y val: " + y);
 		// System.out.println(-x/y);
@@ -187,31 +187,31 @@ public class Matrix {
 	public Matrix inverse(){
 		Matrix fin = new Matrix(this.row, true);
 		for (int i =0; i < this.col; i++){
-			System.out.println("column: " + i);
+			// System.out.println("column: " + i);
 			for (int j = 0; j < this.col-i-1; j++){
 				int num2 = this.col-j-1;
-				System.out.println("row: " + num2);
+				// System.out.println("row: " + num2);
 				double x = findScalar(i,num2,i);
 				// System.out.println(x);
 				this.addMultRows(i, num2, x);
 				fin.addMultRows(i, num2, x);
-				fin.printMatrix();
-				this.printMatrix();
+				// fin.printMatrix();
+				// this.printMatrix();
 			}
 		}
 		for (int i =0; i < this.col; i++){
 			int k = this.col-i-1;
-			System.out.println("column: " + k);
+			// System.out.println("column: " + k);
 			for (int j = 0; j < this.col-i-1; j++){
 				int num3 = j;
-				System.out.println("row: " + num3);
+				// System.out.println("row: " + num3);
 				double y = findScalar(k,num3,k);
 				// System.out.println(y);
 				// fin.multRow(x, num2);
 				this.addMultRows(k, num3, y);
 				fin.addMultRows(k, num3, y);
-				fin.printMatrix();
-				this.printMatrix();
+				// fin.printMatrix();
+				// this.printMatrix();
 			}
 		}
 		for (int i = 0; i < this.row; i++){
@@ -220,10 +220,10 @@ public class Matrix {
 				fin.divRow(i, this.arr[i][i]);
 				this.divRow(i, this.arr[i][i]);
 			}
-		this.printMatrix();
-		fin.printMatrix();
 		}
-		return this;
+		// this.printMatrix();
+		// fin.printMatrix();
+		return fin;
 	}
 
 
@@ -233,7 +233,12 @@ public class Matrix {
 		//double[][] randomInts = {{1,2,5,3},{1,5,7,3},{31,5,6,8},{4,5,6,7}};
 
     Matrix A = new Matrix(randomInts);
-		A.inverse();
+		// A.inverse();
+	  Matrix B = new Matrix(A.row);
+		A.printMatrix();
+		A.inverse().printMatrix();
+		B = A.mult(A.inverse());
+		B.printMatrix();
 	}
 
 }

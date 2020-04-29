@@ -4,7 +4,7 @@ public class Matrix {
 	public int row;
 	public int col;
 	private double[][] arr;
-	private int deleteRow;
+	// private int deleteRow;
 
 	public Matrix() {
 		this(0, 0);
@@ -64,13 +64,13 @@ public class Matrix {
 		System.out.println();
 	}
 
-	public double getElement(int row, int col) {
-		return arr[row][col];
-	}
-
-	public int getDeleteRow() {
-		return deleteRow;
-	}
+	// public double getElement(int row, int col) {
+	// 	return arr[row][col];
+	// }
+	//
+	// public int getDeleteRow() {
+	// 	return deleteRow;
+	// }
 
 	// idea override '+' operation
 	public Matrix add(Matrix other) {
@@ -241,20 +241,50 @@ public class Matrix {
 		return fin;
 	}
 
+	public Matrix lower(){
+		Matrix fin = new Matrix(this.row, true);
+		for (int i =0; i < this.col; i++){
+			for (int j = 0; j < this.col-i-1; j++){
+				int num2 = this.col-j-1;
+				double x = findScalar(i,num2,i);
+				this.addMultRows(i, num2, x);
+				fin.addMultRows(i, num2, x);
+			}
+		}
+		return fin;
+	}
+
+	public Matrix upper(){
+		Matrix fin = new Matrix(this.row, true);
+		for (int i =0; i < this.col; i++){
+			int k = this.col-i-1;
+			for (int j = 0; j < this.col-i-1; j++){
+				int num3 = j;
+				double y = findScalar(k,num3,k);
+				this.addMultRows(k, num3, y);
+				fin.addMultRows(k, num3, y);
+			}
+		}
+		return fin;
+	}
+
 
 	public static void main(String args[]){
 		//double[][] randomInts = {{2,-1,0},{-1,2,-1},{0,-1,2}};
 		//double[][] randomInts = {{1,0,1},{0,2,1},{1,1,1}};
-		double[][] randomInts = {{1,2,3},{1,2,3},{4,5,6}};
-		//double[][] randomInts = {{1,2,5,3},{1,5,7,3},{31,5,6,8},{4,5,6,7}};
+		//double[][] randomInts = {{1,2,3},{1,2,3},{4,5,6}};
+		double[][] randomInts = {{1,2,5,3},{1,5,7,3},{31,5,6,8},{4,5,6,7}};
+		//double[][] randomInts = {{1,0,0,0},{0,1,0,0},{0,6,1,0},{0,0,0,1}};
 
     Matrix A = new Matrix(randomInts);
 		// A.inverse();
 	  Matrix B = new Matrix(A.row);
+		//A.upper().printMatrix();
 		A.printMatrix();
 		A.inverse().printMatrix();
 		B = A.mult(A.inverse());
 		B.printMatrix();
+
 	}
 
 }

@@ -267,6 +267,42 @@ public class Matrix {
 		}
 		return fin;
 	}
+	
+	public int zeroInPivots() {
+		if(row!=col) {
+			return -2; //means matrix is not square
+		}
+		for(int i=0; i<row; i++) {
+			if(arr[i][i]==0) {
+				return i; //returns row with 0
+			}
+		}
+		return -1; //means there are no 0s in any pivots
+	}
+	
+	public boolean rowShift() {
+		if(row!=col) {
+			return false;
+		}
+		Boolean foundShift=false;
+		for(int i=0; i<row; i++) {
+			if(arr[i][i]==0) {
+				for(int j=0; j<row; j++) {
+					if(arr[j][i]!=0 && j!=i && arr[i][j]!=0) {
+						int[] temp = arr[j];
+						arr[j]=arr[i];
+						arr[i]=temp;
+						foundShift=true;
+						rowShift();	
+					}
+				}
+			}
+		}
+		if(zeroInPivots()==-1) {
+			return true;
+		}
+		return false;
+	}
 
 
 	public static void main(String args[]){

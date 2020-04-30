@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.text.DecimalFormat;
 
 public class Matrix {
 	public int row;
@@ -54,9 +55,10 @@ public class Matrix {
 	}
 
 	public void printMatrix() {
+		DecimalFormat df = new DecimalFormat("#.000");
 		for (int i = 0; i < this.row; i++) {
 			for (int j = 0; j < this.col; j++) {
-				System.out.print(this.arr[i][j] + "  ");
+				System.out.print(df.format(this.arr[i][j]) + "  ");
 			}
 			System.out.println();
 		}
@@ -66,7 +68,7 @@ public class Matrix {
 	public double getElement(int row, int col) {
 		return arr[row][col];
 	}
-	
+
 
 	// idea override '+' operation
 	public Matrix add(Matrix other) {
@@ -145,15 +147,15 @@ public class Matrix {
 		}
 	}
 
-	private boolean rowEqZero(int row1) {
-		boolean equalsZero = true;
-		for (int i = 0; i < this.row; i++) {
-			if ((int) this.arr[row1][i] != 0) {
-				equalsZero = false;
-			}
-		}
-		return equalsZero;
-	}
+	// private boolean rowEqZero(int row1) {
+	// 	boolean equalsZero = true;
+	// 	for (int i = 0; i < this.row; i++) {
+	// 		if ((int) this.arr[row1][i] != 0) {
+	// 			equalsZero = false;
+	// 		}
+	// 	}
+	// 	return equalsZero;
+	// }
 
 	public Matrix inverse() {
 		int invertible = this.zeroInPivots();
@@ -192,11 +194,6 @@ public class Matrix {
 				fin.addMultRows(k, num3, y);
 				// fin.printMatrix();
 				// this.printMatrix();
-			}
-		}
-		for (int i = 0; i < this.row; i++) {
-			if (rowEqZero(i) == true) {
-				return null;
 			}
 		}
 		for (int i = 0; i < this.row; i++) {
@@ -270,5 +267,28 @@ public class Matrix {
 			return true;
 		}
 		return false;
+	}
+
+
+	public static void main(String args[]){
+		//double[][] randomInts = {{2,-1,0},{-1,2,-1},{0,-1,2}};
+		//double[][] randomInts = {{1,0,1},{0,2,1},{1,1,1}};
+		//should fail
+		//double[][] randomInts = {{1,2,3},{1,2,3},{4,5,6}};
+		//double[][] randomInts = {{5,1,-2},{-2,0,5},{7,2,8}};
+		//double[][] randomInts = {{1,2,5,3},{1,5,7,3},{31,5,6,8},{4,5,6,7}};
+	  //double[][] randomInts = {{1,0,0,0},{0,1,0,0},{0,6,1,0},{0,0,0,1}};
+		//requires permutation
+	  double[][] randomInts = {{1,2,-1,0},{2,4,-2,-1},{3,-5,6,1},{-1,2,8,-2}};
+
+		Matrix A = new Matrix(randomInts);
+		// A.inverse();
+		Matrix B = new Matrix(A.row);
+		//A.upper().printMatrix();
+		A.printMatrix();
+		A.inverse().printMatrix();
+		B = A.mult(A.inverse());
+		B.printMatrix();
+
 	}
 }

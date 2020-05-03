@@ -5,6 +5,7 @@ public class Matrix {
 	public int row;
 	public int col;
 	private double[][] arr;
+	public int[] initialRows;
 	// private int deleteRow;
 
 	public Matrix() {
@@ -24,6 +25,7 @@ public class Matrix {
 				this.arr[i][j] = 0;
 			}
 		}
+		initialRows = new int[row];
 	}
 
 	public Matrix(int num, boolean t) {
@@ -39,6 +41,7 @@ public class Matrix {
 				}
 			}
 		}
+		initialRows = new int[row];
 	}
 
 	public Matrix(double[][] arr) {
@@ -52,6 +55,7 @@ public class Matrix {
 				this.arr[i][j] = arr[i][j];
 			}
 		}
+		initialRows = new int[row];
 	}
 
 	public void printMatrix() {
@@ -248,6 +252,7 @@ public class Matrix {
 	}
 
 	public boolean rowShift() {
+		Matrix tempMat = new Matrix(arr);
 		if (row != col) {
 			return false;
 		}
@@ -263,7 +268,22 @@ public class Matrix {
 				}
 			}
 		}
+		Boolean match = false;
 		if (zeroInPivots() == -1) {
+			tempMat.printMatrix();
+			for (int i = 0; i < row; i++) {
+				for (int j = 0; j < row; j++) {
+					match = true;
+					for (int k = 0; k < col; k++) {
+						if (tempMat.arr[i][k] != arr[j][k]) {
+							match = false;
+						}
+					}
+					if (match == true) {
+						initialRows[i]=j;
+					}
+				}
+			}
 			return true;
 		}
 		return false;

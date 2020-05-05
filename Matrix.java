@@ -290,7 +290,10 @@ public class Matrix {
 	public void revertShift(int[] x) {
 		double[][] temp = new double[row][col];
 		for (int i = 0; i < row; i++) {
-			temp[i]= arr[x[i]];
+			for(int j =0; j<col; j++) {
+				
+				temp[i][j] = arr[i][x[j]]; 
+			}
 		}
 		arr=temp;
 	}

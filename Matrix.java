@@ -161,9 +161,11 @@ public class Matrix {
 	// }
 
 	public Matrix inverse() {
+		Boolean shifted=false;
 		int invertible = this.zeroInPivots();
 		if (invertible >= 0) {
-			if (!this.rowShift()) {
+			shifted = this.rowShift();
+			if (!shifted) {
 				return null;
 			}
 		} else if (invertible == -2) {
@@ -207,10 +209,11 @@ public class Matrix {
 		}
 		// this.printMatrix();
 		// fin.printMatrix();
-		fin.revertShift(this.initialRows);
+		if(shifted) {
+			fin.revertShift(this.initialRows);
+		}
 		return fin;
 	}
-
 	public Matrix lower() {
 		Matrix fin = new Matrix(this.row, true);
 		for (int i = 0; i < this.col; i++) {

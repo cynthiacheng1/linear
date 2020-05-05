@@ -172,36 +172,39 @@ public class Matrix {
 			return null;
 		}
 		Matrix fin = new Matrix(this.row, true);
+		//for loop to make the lower matrix
 		for (int i = 0; i < this.col; i++) {
-			// System.out.println("column: " + i);
 			for (int j = 0; j < this.col - i - 1; j++) {
 				int num2 = this.col - j - 1;
-				// System.out.println("row: " + num2);
 				double x = findScalar(i, num2, i);
-				// System.out.println(x);
 				this.addMultRows(i, num2, x);
 				fin.addMultRows(i, num2, x);
-				// fin.printMatrix();
-				// this.printMatrix();
 			}
 		}
+		if (invertible >= 0){
+			shifted = this.rowShift();
+			if (!shifted){
+				return null;
+			}
+		}
+		// for loop to make the upper matrix = 0
 		for (int i = 0; i < this.col; i++) {
 			int k = this.col - i - 1;
 			// System.out.println("column: " + k);
 			for (int j = 0; j < this.col - i - 1; j++) {
 				int num3 = j;
-				// System.out.println("row: " + num3);
 				double y = findScalar(k, num3, k);
-				// System.out.println(y);
-				// fin.multRow(x, num2);
 				this.addMultRows(k, num3, y);
 				fin.addMultRows(k, num3, y);
-				// fin.printMatrix();
-				// this.printMatrix();
+			}
+		}
+		if (invertible >= 0){
+			shifted = this.rowShift();
+			if (!shifted){
+				return null;
 			}
 		}
 		for (int i = 0; i < this.row; i++) {
-			// System.out.println(this.arr[i][i]);
 			if (this.arr[i][i] != 1) {
 				fin.divRow(i, this.arr[i][i]);
 				this.divRow(i, this.arr[i][i]);
@@ -294,32 +297,32 @@ public class Matrix {
 		double[][] temp = new double[row][col];
 		for (int i = 0; i < row; i++) {
 			for(int j =0; j<col; j++) {
-				
-				temp[i][j] = arr[i][x[j]]; 
+
+				temp[i][j] = arr[i][x[j]];
 			}
 		}
 		arr=temp;
 	}
 
-//	public static void main(String args[]) {
-//		// double[][] randomInts = {{2,-1,0},{-1,2,-1},{0,-1,2}};
-//		// double[][] randomInts = {{1,0,1},{0,2,1},{1,1,1}};
-//		// should fail
-//		// double[][] randomInts = {{1,2,3},{1,2,3},{4,5,6}};
-//		// double[][] randomInts = {{5,1,-2},{-2,0,5},{7,2,8}};
-//		// double[][] randomInts = {{1,2,5,3},{1,5,7,3},{31,5,6,8},{4,5,6,7}};
-//		// double[][] randomInts = {{1,0,0,0},{0,1,0,0},{0,6,1,0},{0,0,0,1}};
-//		// requires permutation
-//		double[][] randomInts = { { 1, 2, -1, 0 }, { 2, 4, -2, -1 }, { 3, -5, 6, 1 }, { -1, 2, 8, -2 } };
-//
-//		Matrix A = new Matrix(randomInts);
-//		// A.inverse();
-//		Matrix B = new Matrix(A.row);
-//		// A.upper().printMatrix();
-//		A.printMatrix();
-//		A.inverse().printMatrix();
-//		B = A.mult(A.inverse());
-//		B.printMatrix();
-//
-//	}
+	public static void main(String args[]) {
+		//double[][] randomInts = {{2,-1,0},{-1,2,-1},{0,-1,2}};
+		// double[][] randomInts = {{1,0,1},{0,2,1},{1,1,1}};
+		// should fail
+		// double[][] randomInts = {{1,2,3},{1,2,3},{4,5,6}};
+		// double[][] randomInts = {{5,1,-2},{-2,0,5},{7,2,8}};
+		// double[][] randomInts = {{1,2,5,3},{1,5,7,3},{31,5,6,8},{4,5,6,7}};
+		// double[][] randomInts = {{1,0,0,0},{0,1,0,0},{0,6,1,0},{0,0,0,1}};
+		// requires permutation
+		double[][] randomInts = { { 1, 2, -1, 0 }, { 2, 4, -2, -1 }, { 3, -5, 6, 1 }, { -1, 2, 8, -2 } };
+
+		Matrix A = new Matrix(randomInts);
+		// A.inverse();
+		Matrix B = new Matrix(A.row);
+		// A.upper().printMatrix();
+		A.printMatrix();
+		A.inverse().printMatrix();
+		B = A.mult(A.inverse());
+		B.printMatrix();
+
+	}
 }

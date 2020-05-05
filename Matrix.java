@@ -73,7 +73,6 @@ public class Matrix {
 		return arr[row][col];
 	}
 
-
 	// idea override '+' operation
 	public Matrix add(Matrix other) {
 		if ((this.row == other.row) && (this.col == other.col)) {
@@ -152,23 +151,22 @@ public class Matrix {
 	}
 
 	// private boolean rowEqZero(int row1) {
-	// 	boolean equalsZero = true;
-	// 	for (int i = 0; i < this.row; i++) {
-	// 		if ((int) this.arr[row1][i] != 0) {
-	// 			equalsZero = false;
-	// 		}
-	// 	}
-	// 	return equalsZero;
+	// boolean equalsZero = true;
+	// for (int i = 0; i < this.row; i++) {
+	// if ((int) this.arr[row1][i] != 0) {
+	// equalsZero = false;
+	// }
+	// }
+	// return equalsZero;
 	// }
 
 	public Matrix inverse() {
 		int invertible = this.zeroInPivots();
-		if(invertible>=0) {
-			if(!this.rowShift()) {
+		if (invertible >= 0) {
+			if (!this.rowShift()) {
 				return null;
 			}
-		}
-		else if(invertible==-2) {
+		} else if (invertible == -2) {
 			return null;
 		}
 		Matrix fin = new Matrix(this.row, true);
@@ -209,6 +207,7 @@ public class Matrix {
 		}
 		// this.printMatrix();
 		// fin.printMatrix();
+		fin.revertShift(this.initialRows);
 		return fin;
 	}
 
@@ -270,7 +269,6 @@ public class Matrix {
 		}
 		Boolean match = false;
 		if (zeroInPivots() == -1) {
-			tempMat.printMatrix();
 			for (int i = 0; i < row; i++) {
 				for (int j = 0; j < row; j++) {
 					match = true;
@@ -280,7 +278,7 @@ public class Matrix {
 						}
 					}
 					if (match == true) {
-						initialRows[i]=j;
+						initialRows[i] = j;
 					}
 				}
 			}
@@ -289,26 +287,33 @@ public class Matrix {
 		return false;
 	}
 
-
-	public static void main(String args[]){
-		//double[][] randomInts = {{2,-1,0},{-1,2,-1},{0,-1,2}};
-		//double[][] randomInts = {{1,0,1},{0,2,1},{1,1,1}};
-		//should fail
-		//double[][] randomInts = {{1,2,3},{1,2,3},{4,5,6}};
-		//double[][] randomInts = {{5,1,-2},{-2,0,5},{7,2,8}};
-		//double[][] randomInts = {{1,2,5,3},{1,5,7,3},{31,5,6,8},{4,5,6,7}};
-	  //double[][] randomInts = {{1,0,0,0},{0,1,0,0},{0,6,1,0},{0,0,0,1}};
-		//requires permutation
-	  double[][] randomInts = {{1,2,-1,0},{2,4,-2,-1},{3,-5,6,1},{-1,2,8,-2}};
-
-		Matrix A = new Matrix(randomInts);
-		// A.inverse();
-		Matrix B = new Matrix(A.row);
-		//A.upper().printMatrix();
-		A.printMatrix();
-		A.inverse().printMatrix();
-		B = A.mult(A.inverse());
-		B.printMatrix();
-
+	public void revertShift(int[] x) {
+		double[][] temp = new double[row][col];
+		for (int i = 0; i < row; i++) {
+			temp[i]= arr[x[i]];
+		}
+		arr=temp;
 	}
+
+//	public static void main(String args[]) {
+//		// double[][] randomInts = {{2,-1,0},{-1,2,-1},{0,-1,2}};
+//		// double[][] randomInts = {{1,0,1},{0,2,1},{1,1,1}};
+//		// should fail
+//		// double[][] randomInts = {{1,2,3},{1,2,3},{4,5,6}};
+//		// double[][] randomInts = {{5,1,-2},{-2,0,5},{7,2,8}};
+//		// double[][] randomInts = {{1,2,5,3},{1,5,7,3},{31,5,6,8},{4,5,6,7}};
+//		// double[][] randomInts = {{1,0,0,0},{0,1,0,0},{0,6,1,0},{0,0,0,1}};
+//		// requires permutation
+//		double[][] randomInts = { { 1, 2, -1, 0 }, { 2, 4, -2, -1 }, { 3, -5, 6, 1 }, { -1, 2, 8, -2 } };
+//
+//		Matrix A = new Matrix(randomInts);
+//		// A.inverse();
+//		Matrix B = new Matrix(A.row);
+//		// A.upper().printMatrix();
+//		A.printMatrix();
+//		A.inverse().printMatrix();
+//		B = A.mult(A.inverse());
+//		B.printMatrix();
+//
+//	}
 }

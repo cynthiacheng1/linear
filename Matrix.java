@@ -161,16 +161,25 @@ public class Matrix {
 	// }
 
 	public Matrix inverse() {
-		Boolean shifted=false;
+		Boolean shifted1= false;
+		Boolean shifted2= false;
+		Boolean shifted3=false;
+		
+		Boolean needsShift = false;
 		int invertible = this.zeroInPivots();
 		if (invertible >= 0) {
-			shifted = this.rowShift();
-			if (!shifted) {
+			needsShift = this.rowShift();
+			if (!needsShift) {
 				return null;
 			}
+			shifted1=true;
+			
 		} else if (invertible == -2) {
 			return null;
 		}
+		
+		int[] firstShift= initialRows.clone();
+
 		Matrix fin = new Matrix(this.row, true);
 		//for loop to make the lower matrix
 		for (int i = 0; i < this.col; i++) {
@@ -181,12 +190,18 @@ public class Matrix {
 				fin.addMultRows(i, num2, x);
 			}
 		}
+		
+		invertible = this.zeroInPivots();
 		if (invertible >= 0){
-			shifted = this.rowShift();
-			if (!shifted){
+			needsShift = this.rowShift();
+			if (!needsShift){
 				return null;
 			}
+			shifted2=true;
 		}
+		
+		int[] secondShift= initialRows.clone();
+
 		// for loop to make the upper matrix = 0
 		for (int i = 0; i < this.col; i++) {
 			int k = this.col - i - 1;
@@ -198,12 +213,18 @@ public class Matrix {
 				fin.addMultRows(k, num3, y);
 			}
 		}
+		
+		invertible= this.zeroInPivots();
 		if (invertible >= 0){
-			shifted = this.rowShift();
-			if (!shifted){
+			needsShift = this.rowShift();
+			if (!needsShift){
 				return null;
 			}
+			shifted3=true;
 		}
+		
+		int[] thirdShift= initialRows.clone();
+		
 		for (int i = 0; i < this.row; i++) {
 			if (this.arr[i][i] != 1) {
 				fin.divRow(i, this.arr[i][i]);
@@ -212,20 +233,15 @@ public class Matrix {
 		}
 		// this.printMatrix();
 		// fin.printMatrix();
-		if(shifted) {
-			fin.revertShift(this.initialRows);
+		
+		if(shifted1) {
+			fin.revertShift(firstShift);
 		}
-		return fin;
-	}
-	public Matrix lower() {
-		Matrix fin = new Matrix(this.row, true);
-		for (int i = 0; i < this.col; i++) {
-			for (int j = 0; j < this.col - i - 1; j++) {
-				int num2 = this.col - j - 1;
-				double x = findScalar(i, num2, i);
-				this.addMultRows(i, num2, x);
-				fin.addMultRows(i, num2, x);
-			}
+		if(shifted2) {
+			fin.revertShift(secondShift);
+		}
+		if(shifted3) {
+			fin.revertShift(thirdShift);
 		}
 		return fin;
 	}

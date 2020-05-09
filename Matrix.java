@@ -259,6 +259,50 @@ public class Matrix {
 		}
 		return fin;
 	}
+	
+	public double determinant() {
+		double determinant = 0;
+		if (row != col) {
+			return 0;
+		}
+		if (row == 1) {
+			return arr[0][0];
+		}
+		if (row == 2) {
+			return ((arr[0][0] * arr[1][1]) - (arr[0][1] * arr[1][0]));
+		}
+		Matrix tempMat;
+		double[][] tempArr = new double[row - 1][col - 1];
+		int colCounter = 0;
+		int rowCounter = 0;
+
+		for (int firstRowIndex = 0; firstRowIndex < col; firstRowIndex++) {
+			for (int i = 1; i < col; i++) {
+				for (int j = 0; j < col; j++) {
+					if (j != firstRowIndex) {
+						tempArr[rowCounter][colCounter] = arr[i][j];
+						colCounter++;
+					}
+				}
+				rowCounter++;
+				colCounter = 0;
+			}
+			tempMat = new Matrix(tempArr);
+			//tempMat.printMatrix();
+			if(firstRowIndex%2==0) {
+				//System.out.println(firstRowIndex + " first if");
+				determinant += arr[0][firstRowIndex]*tempMat.determinant();
+			}
+			else {
+				//System.out.println(firstRowIndex + " second if");
+				determinant -= arr[0][firstRowIndex]*tempMat.determinant();
+			}
+			
+			rowCounter = 0;
+		}
+		return determinant;
+
+	}
 
 	public int zeroInPivots() {
 		if (row != col) {

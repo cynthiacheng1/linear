@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,7 +20,7 @@ public class App {
 	static int cols, rows;
 	static double[][] matrix1Arr;
 	static double[][] matrix2Arr;
-	static JButton menu = button("Return to Menu", 410, 10, 150, 35);
+	static JButton menu = button("Return to Menu", 432, 5, 150, 35);
 
 	public static void main(String[] args) {
 		menu.addActionListener(returnToMenu);
@@ -31,11 +32,12 @@ public class App {
 		title = title("What would you like to compute?", 150); // title function creates a label on top of the
 																// window with the inputted string
 		// creates button with given dimensions (see method)
-		JButton addition = button("Matrix Addition", 10, 50, 150, 50);
-		JButton subtraction = button("Matrix Subtraction", 10, 130, 150, 50);
-		JButton multiplication = button("Matrix Multiplication", 10, 210, 150, 50);
-		JButton scalerMult = button("Scaler Multiplication", 10, 290, 150, 50);
-		JButton inverse = button("Inverse", 200, 50, 150, 50);
+		JButton addition = button("Matrix Addition", 30, 50, 150, 50);
+		JButton subtraction = button("Matrix Subtraction", 30, 130, 150, 50);
+		JButton multiplication = button("Matrix Multiplication", 220, 50, 150, 50);
+		JButton scalerMult = button("Scaler Multiplication", 220, 130, 150, 50);
+		JButton inverse = button("Inverse", 410, 50, 150, 50);
+		JButton determinant = button("Determinant", 410, 130, 150, 50);
 
 		ActionListener add = new ActionListener() {// creates an action that can be attached to a button that is pressed
 													// similar to an if statement (if button is pressed)
@@ -67,6 +69,12 @@ public class App {
 				inverse();
 			}
 		};
+		
+		ActionListener det = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				determinant();
+			}
+		};
 
 		// attaches actions to buttons
 		addition.addActionListener(add);
@@ -74,6 +82,7 @@ public class App {
 		multiplication.addActionListener(mult);
 		scalerMult.addActionListener(scalMult);
 		inverse.addActionListener(inv);
+		determinant.addActionListener(det);
 
 		// adding elements to frame
 		frame.add(title);
@@ -82,9 +91,11 @@ public class App {
 		frame.add(multiplication);
 		frame.add(scalerMult);
 		frame.add(inverse);
+		frame.add(determinant);
 
 		// specifying frame dimensions
-		frame.setSize(600, 400);
+		frame.setSize(600, 250);
+		frame.getContentPane().setBackground(Color.white);
 		frame.setLayout(null);
 		frame.setVisible(true);
 	}
@@ -96,11 +107,11 @@ public class App {
 		} else if (x == 1) {
 			title = title("Matrix Subtraction", 225);
 		} else {
-			title = title("Matrix Multiplication", 225);
+			title = title("Matrix Multiplication", 200);
 		}
 
 		displayRowAndColEntry(10, 50); // method creates input row and col text and the box with it
-		JButton button = button("Submit", 10, 100, 100, 40);
+		JButton button = button("Submit", 10, 130, 150, 50);
 
 		// adding created buttons, text, and textfields to the window
 
@@ -114,6 +125,9 @@ public class App {
 				// boxes
 				rows = Integer.parseInt(rowTextfield.getText());
 				cols = Integer.parseInt(colTextfield.getText());
+				if(rows>7) {
+					frame.setSize(600, 260+20*(rows-7));
+				}
 				clearFrame(); // clears the window
 
 				/// adds input matrix text and makes input boxes corresponding to the number of
@@ -121,7 +135,7 @@ public class App {
 				displayInputMatrix(10, 50, 1);
 				displayInputMatrix(300, 50, 2);
 
-				JButton button = button("Compute", 10, 10, 100, 40);
+				JButton button = button("Compute", 5, 5, 150, 35);
 
 				frame.add(button);
 				frame.add(title);
@@ -168,10 +182,10 @@ public class App {
 
 	public static void scalerMult() {
 		clearFrame();
-		title = title("Scaler Multiplication", 220);
+		title = title("Scaler Multiplication", 200);
 		displayRowAndColEntry(10, 50);
-		JButton button = button("Submit", 10, 100, 100, 40);
-
+		JButton button = button("Submit", 10, 130, 150, 50);
+		
 		frame.add(button);
 		frame.add(title);
 		frame.add(menu);
@@ -180,13 +194,16 @@ public class App {
 			public void actionPerformed(ActionEvent e) {
 				rows = Integer.parseInt(rowTextfield.getText());
 				cols = Integer.parseInt(colTextfield.getText());
+				if(rows>7) {
+					frame.setSize(600, 260+20*(rows-7));
+				}
 
 				clearFrame();
 
 				displayInputMatrix(10, 50, 1);
-				displayScalerInput(300, 50);
+				displayScalerInput(432, 50);
 
-				JButton button = button("Compute", 10, 10, 100, 40);
+				JButton button = button("Compute", 5, 5, 150, 35);
 
 				frame.add(button);
 				frame.add(title);
@@ -215,7 +232,7 @@ public class App {
 		title = title("Compute Inverse", 220);
 
 		displayRowAndColEntry(10, 50);
-		JButton button = button("Submit", 10, 100, 100, 40);
+		JButton button = button("Submit", 10, 130, 150, 50);
 
 		ActionListener a = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -224,7 +241,9 @@ public class App {
 
 				if (rows != cols) {
 					clearFrame();
-					JLabel Error = header("Only square matrices can have an inverse", 20, 200);
+					JLabel Error = header("Only square matrices can have an inverse", 10, 185);
+					Error.setForeground(Color.red);
+					
 					displayRowAndColEntry(10, 50);
 					frame.add(button);
 					frame.add(title);
@@ -232,12 +251,16 @@ public class App {
 					frame.add(Error);
 
 				} else {
+					
+					if(rows>7) {
+						frame.setSize(600, 260+20*(rows-7));
+					}
 
 					clearFrame();
 
 					displayInputMatrix(10, 50, 1);
 
-					JButton button = button("Compute", 10, 10, 100, 40);
+					JButton button = button("Compute", 5, 5, 150, 35);
 
 					frame.add(button);
 					frame.add(title);
@@ -266,39 +289,103 @@ public class App {
 		frame.add(menu);
 		frame.add(title);
 	}
+	
+	public static void determinant() {
+		clearFrame();
+		title = title("Compute Determinant", 200);
+
+		displayRowAndColEntry(10, 50);
+		JButton button = button("Submit", 10, 130, 150, 50);
+
+		ActionListener a = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rows = Integer.parseInt(rowTextfield.getText());
+				cols = Integer.parseInt(colTextfield.getText());
+
+				if (rows != cols) {
+					clearFrame();
+					JLabel Error = header("Only square matrices can have a determinant.", 10, 185);
+					Error.setForeground(Color.red);
+					
+					displayRowAndColEntry(10, 50);
+					frame.add(button);
+					frame.add(title);
+					frame.add(menu);
+					frame.add(Error);
+
+				} else {
+					
+					if(rows>7) {
+						frame.setSize(600, 260+20*(rows-7));
+					}
+
+					clearFrame();
+
+					displayInputMatrix(10, 50, 1);
+
+					JButton button = button("Compute", 5, 5, 150, 35);
+
+					frame.add(button);
+					frame.add(title);
+					frame.add(menu);
+
+					ActionListener a = new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							clearFrame();
+							frame.add(title);
+							frame.add(menu);
+
+							createMatrixArrays(false);
+
+							double result = ((new Matrix(matrix1Arr)).determinant());
+							JLabel res= header(""+result, 10, 40);		
+							frame.add(res);
+						}
+					};
+					button.addActionListener(a);
+				}
+			}
+		};
+
+		button.addActionListener(a);
+
+		frame.add(button);
+		frame.add(menu);
+		frame.add(title);
+	}
 
 	public static JLabel title(String s, int x) {// creates a title in the center of the screen
 
 		JLabel title = new JLabel(s);
-		title.setFont(new Font("", 100, 20));
+		title.setFont(new Font("Georgia", 100, 20));
 		title.setBounds(x, 10, 2000, 30);
 		return title;
 	}
 
 	public static JLabel header(String s, int x, int y) {// creates text at given x and y coordinate
 		JLabel header = new JLabel(s);
-		header.setFont(new Font("", 0, 15));
+		header.setFont(new Font("Candara", 0, 15));
 		header.setBounds(x, y, 1000, 20);
 		return header;
 	}
 
 	// creates input row and col text and text boxes at given x and y
 	public static void displayRowAndColEntry(int x, int y) {
-		rowLabel = new JLabel("Input rows");
-		rowLabel.setFont(new Font("", 0, 15));
-		rowLabel.setBounds(x, y, 100, 20);
+		rowLabel = new JLabel("Input rows:");
+		rowLabel.setFont(new Font("Candara", 0, 15));
+		rowLabel.setBounds(x, y+4, 200, 20);
 
 		rowTextfield = new JTextField("", 20);
-		rowTextfield.setFont(new Font("", 50, 15));
-		rowTextfield.setBounds(x + 75, y + 2, 30, 20);
+		rowTextfield.setFont(new Font("Times New Roman", 0, 15));
+		rowTextfield.setBounds(x + 117, y + 2, 40, 25);
 
-		colLabel = new JLabel("Input columns");
-		colLabel.setFont(new Font("", 50, 15));
-		colLabel.setBounds(x, y + 20, 100, 20);
+		colLabel = new JLabel("Input columns:");
+		colLabel.setFont(new Font("Candara", 0, 15));
+		colLabel.setBounds(x, y + 45, 200, 20);
 
 		colTextfield = new JTextField("", 20);
-		colTextfield.setFont(new Font("", 50, 15));
-		colTextfield.setBounds(x + 102, y + 22, 30, 20);
+		colTextfield.setFont(new Font("Times New Roman", 0, 15));
+		colTextfield.setBounds(x + 117, y + 42, 40, 25);
 
 		frame.add(colLabel);
 		frame.add(colTextfield);
@@ -307,13 +394,13 @@ public class App {
 	}
 
 	public static void displayScalerInput(int x, int y) {
-		scalLabel = new JLabel("Input scaler");
-		scalLabel.setFont(new Font("", 0, 15));
-		scalLabel.setBounds(x, y, 100, 20);
+		scalLabel = new JLabel("Input scaler:");
+		scalLabel.setFont(new Font("Candara", 0, 15));
+		scalLabel.setBounds(x, y+5, 200, 20);
 
 		scalTextfield = new JTextField("", 20);
-		scalTextfield.setFont(new Font("", 50, 15));
-		scalTextfield.setBounds(x + 82, y + 2, 30, 20);
+		scalTextfield.setFont(new Font("Times New Roman", 0, 15));
+		scalTextfield.setBounds(x + 110, y + 2, 40, 25);
 
 		frame.add(scalLabel);
 		frame.add(scalTextfield);
@@ -328,7 +415,7 @@ public class App {
 		} else {
 			matrixTitle = new JLabel("Input Matrix " + n);
 		}
-		matrixTitle.setFont(new Font("", 0, 15));
+		matrixTitle.setFont(new Font("Candara", 0, 15));
 		matrixTitle.setBounds(x, y, 100, 20);
 
 		y += 22;
@@ -336,7 +423,7 @@ public class App {
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				JTextField tempTextField = new JTextField("", 20);
-				tempTextField.setFont(new Font("", 50, 15));
+				tempTextField.setFont(new Font("Times New Roman", 0, 15));
 				tempTextField.setBounds(x, y, 30, 20);
 				if (n == 1) {// value of n decides if this goes in to matrix1's field or matrix 2's
 					matrix1TextFields.add(tempTextField);
@@ -358,6 +445,8 @@ public class App {
 	public static JButton button(String s, int x, int y, int length, int width) {// creates button with given dimension
 		JButton button = new JButton(s);
 		button.setBounds(x, y, length, width);
+		button.setFont(new Font("Candara", 0, 13));
+		button.setBackground(Color.pink);
 		return button;
 
 	}
@@ -396,7 +485,7 @@ public class App {
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				JLabel temp = new JLabel("" + (Math.round(m.getElement(i, j) * 100.0) / 100.0));
-				temp.setFont(new Font("", 50, 15));
+				temp.setFont(new Font("Times New Roman", 0, 15));
 				temp.setBounds(x, y, 100, 20);
 				frame.add(temp);
 				x += 50;

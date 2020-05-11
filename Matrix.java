@@ -105,7 +105,7 @@ public class Matrix {
 		if (this.col == other.row) {
 			Matrix resMatrix = new Matrix(this.row, other.col);
 			for (int i = 0; i < this.row; i++) {
-				for (int j = 0; j < this.col; j++) {
+				for (int j = 0; j < other.col; j++) {
 					resMatrix.arr[i][j] = multCell(this, other, i, j);
 				}
 			}
@@ -164,7 +164,7 @@ public class Matrix {
 		Boolean shifted1= false;
 		Boolean shifted2= false;
 		Boolean shifted3=false;
-		
+
 		Boolean needsShift = false;
 		int invertible = this.zeroInPivots();
 		if (invertible >= 0) {
@@ -173,11 +173,11 @@ public class Matrix {
 				return null;
 			}
 			shifted1=true;
-			
+
 		} else if (invertible == -2) {
 			return null;
 		}
-		
+
 		int[] firstShift= initialRows.clone();
 
 		Matrix fin = new Matrix(this.row, true);
@@ -190,7 +190,7 @@ public class Matrix {
 				fin.addMultRows(i, num2, x);
 			}
 		}
-		
+
 		invertible = this.zeroInPivots();
 		if (invertible >= 0){
 			needsShift = this.rowShift();
@@ -199,7 +199,7 @@ public class Matrix {
 			}
 			shifted2=true;
 		}
-		
+
 		int[] secondShift= initialRows.clone();
 
 		// for loop to make the upper matrix = 0
@@ -213,7 +213,7 @@ public class Matrix {
 				fin.addMultRows(k, num3, y);
 			}
 		}
-		
+
 		invertible= this.zeroInPivots();
 		if (invertible >= 0){
 			needsShift = this.rowShift();
@@ -222,9 +222,9 @@ public class Matrix {
 			}
 			shifted3=true;
 		}
-		
+
 		int[] thirdShift= initialRows.clone();
-		
+
 		for (int i = 0; i < this.row; i++) {
 			if (this.arr[i][i] != 1) {
 				fin.divRow(i, this.arr[i][i]);
@@ -233,7 +233,7 @@ public class Matrix {
 		}
 		// this.printMatrix();
 		// fin.printMatrix();
-		
+
 		if(shifted1) {
 			fin.revertShift(firstShift);
 		}
@@ -259,7 +259,7 @@ public class Matrix {
 		}
 		return fin;
 	}
-	
+
 	public double determinant() {
 		double determinant = 0;
 		if (row != col) {
@@ -297,7 +297,7 @@ public class Matrix {
 				//System.out.println(firstRowIndex + " second if");
 				determinant -= arr[0][firstRowIndex]*tempMat.determinant();
 			}
-			
+
 			rowCounter = 0;
 		}
 		return determinant;
@@ -373,16 +373,21 @@ public class Matrix {
 		// double[][] randomInts = {{1,2,5,3},{1,5,7,3},{31,5,6,8},{4,5,6,7}};
 		// double[][] randomInts = {{1,0,0,0},{0,1,0,0},{0,6,1,0},{0,0,0,1}};
 		// requires permutation
-		double[][] randomInts = { { 1, 2, -1, 0 }, { 2, 4, -2, -1 }, { 3, -5, 6, 1 }, { -1, 2, 8, -2 } };
+		//double[][] randomInts = { { 1, 2, -1, 0 }, { 2, 4, -2, -1 }, { 3, -5, 6, 1 }, { -1, 2, 8, -2 } };
 
-		Matrix A = new Matrix(randomInts);
-		// A.inverse();
-		Matrix B = new Matrix(A.row);
-		// A.upper().printMatrix();
-		A.printMatrix();
-		A.inverse().printMatrix();
-		B = A.mult(A.inverse());
-		B.printMatrix();
+		// Matrix A = new Matrix(randomInts);
+		// // A.inverse();
+		// Matrix B = new Matrix(A.row);
+		// // A.upper().printMatrix();
+		// A.printMatrix();
+		// A.inverse().printMatrix();
+		// B = A.mult(A.inverse());
+		// B.printMatrix();
 
+		// double[][] arrA = {{2,2,2},{2,2,2}};
+		// double[][] arrB = {{2,3},{2,2},{2,2}};
+		// Matrix C = new Matrix(arrA);
+		// Matrix D = new Matrix(arrB);
+		// C.mult(D).printMatrix();
 	}
 }

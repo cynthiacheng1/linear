@@ -1,12 +1,11 @@
-import java.util.Scanner;
 import java.text.DecimalFormat;
+import java.lang.Math;
 
 public class Matrix {
 	public int row;
 	public int col;
 	private double[][] arr;
 	public int[] initialRows;
-	// private int deleteRow;
 
 	public Matrix() {
 		this(0, 0);
@@ -45,8 +44,6 @@ public class Matrix {
 	}
 
 	public Matrix(double[][] arr) {
-		// can be broken if someone inputs a 2d array which has a diff number of
-		// elements in each row
 		this.row = arr.length;
 		this.col = arr[0].length;
 		this.arr = new double[this.row][this.col];
@@ -59,6 +56,7 @@ public class Matrix {
 	}
 
 	public void printMatrix() {
+		//all are rounded to the third place
 		DecimalFormat df = new DecimalFormat("#.000");
 		for (int i = 0; i < this.row; i++) {
 			for (int j = 0; j < this.col; j++) {
@@ -69,11 +67,11 @@ public class Matrix {
 		System.out.println();
 	}
 
+
 	public double getElement(int row, int col) {
 		return arr[row][col];
 	}
 
-	// idea override '+' operation
 	public Matrix add(Matrix other) {
 		if ((this.row == other.row) && (this.col == other.col)) {
 			Matrix finalMatrix = new Matrix(this.row, this.col);
@@ -122,66 +120,49 @@ public class Matrix {
 		return cell;
 	}
 
+	//finds the number that can be multiplied to row1 then added to row2 to get zero
 	private double findScalar(int row1, int row2, int col) {
-		// if y = 0 dont do anything to the Matrix
-		// if x = 0 need to switch the order of rows around
 		double x = this.arr[row1][col];
 		double y = this.arr[row2][col];
-		// this.printMatrix();
-		// System.out.println("x val: " + x);
-		// System.out.println("y val: " + y);
-		// System.out.println(-x/y);
 		if (x == 0)
 			return 0.0;
 		return -y / x;
 	}
 
 	private void divRow(int row1, double num) {
-		// System.out.println(num);
 		for (int i = 0; i < this.row; i++) {
 			this.arr[row1][i] = (1 / num) * this.arr[row1][i];
 		}
 	}
 
 	private void addMultRows(int row1, int row2, double scalar) {
-		// adds to the row2
+		// multiplies the scalar to the first row then adds with row2
 		for (int i = 0; i < this.row; i++) {
 			this.arr[row2][i] = scalar * this.arr[row1][i] + this.arr[row2][i];
 		}
 	}
 
-	// private boolean rowEqZero(int row1) {
-	// boolean equalsZero = true;
-	// for (int i = 0; i < this.row; i++) {
-	// if ((int) this.arr[row1][i] != 0) {
-	// equalsZero = false;
-	// }
-	// }
-	// return equalsZero;
-	// }
+	private boolean validRow(int rowNum){
+		int total = 0;
+		for (int i = 0; i < this.arr[rowNum].length; i++){
+			if (this.arr[rowNum][i] == Double.NaN || this.arr[rowNum][i] == Double.POSITIVE_INFINITY || this.arr[rowNum][i] == Double.NEGATIVE_INFINITY){
+				return false;
+			}
+			total += Math.abs(this.arr[rowNum][i]);
+		}
+		if (total == 0) return false;
+		return true;
+	}
+
+	private void printRow(int rowNum){
+		for (int i = 0; i < this.arr[rowNum].length; i++){
+			System.out.println(this.arr[rowNum][i] + " ");
+		}
+	}
 
 	public Matrix inverse() {
-		Boolean shifted1= false;
-		Boolean shifted2= false;
-		Boolean shifted3=false;
-
-		Boolean needsShift = false;
-		int invertible = this.zeroInPivots();
-		if (invertible >= 0) {
-			needsShift = this.rowShift();
-			if (!needsShift) {
-				return null;
-			}
-			shifted1=true;
-
-		} else if (invertible == -2) {
-			return null;
-		}
-
-		int[] firstShift= initialRows.clone();
-
 		Matrix fin = new Matrix(this.row, true);
-		//for loop to make the lower matrix
+		//for loop to make the lower matrix equal zero
 		for (int i = 0; i < this.col; i++) {
 			for (int j = 0; j < this.col - i - 1; j++) {
 				int num2 = this.col - j - 1;
@@ -190,22 +171,9 @@ public class Matrix {
 				fin.addMultRows(i, num2, x);
 			}
 		}
-
-		invertible = this.zeroInPivots();
-		if (invertible >= 0){
-			needsShift = this.rowShift();
-			if (!needsShift){
-				return null;
-			}
-			shifted2=true;
-		}
-
-		int[] secondShift= initialRows.clone();
-
-		// for loop to make the upper matrix = 0
+		// for loop to make the upper matrix equal zero
 		for (int i = 0; i < this.col; i++) {
 			int k = this.col - i - 1;
-			// System.out.println("column: " + k);
 			for (int j = 0; j < this.col - i - 1; j++) {
 				int num3 = j;
 				double y = findScalar(k, num3, k);
@@ -213,36 +181,19 @@ public class Matrix {
 				fin.addMultRows(k, num3, y);
 			}
 		}
-
-		invertible= this.zeroInPivots();
-		if (invertible >= 0){
-			needsShift = this.rowShift();
-			if (!needsShift){
-				return null;
+		for (int i = 0; i < this.row; i++) {
+			if (!this.validRow(i)){
+				System.out.println("INVALIDDD");
 			}
-			shifted3=true;
 		}
-
-		int[] thirdShift= initialRows.clone();
-
+		//divides the inverse matrix so all the pivots equal 1
 		for (int i = 0; i < this.row; i++) {
 			if (this.arr[i][i] != 1) {
 				fin.divRow(i, this.arr[i][i]);
 				this.divRow(i, this.arr[i][i]);
 			}
 		}
-		// this.printMatrix();
-		// fin.printMatrix();
-
-		if(shifted1) {
-			fin.revertShift(firstShift);
-		}
-		if(shifted2) {
-			fin.revertShift(secondShift);
-		}
-		if(shifted3) {
-			fin.revertShift(thirdShift);
-		}
+		//returns the inverse matrix
 		return fin;
 	}
 
@@ -373,16 +324,16 @@ public class Matrix {
 		// double[][] randomInts = {{1,2,5,3},{1,5,7,3},{31,5,6,8},{4,5,6,7}};
 		// double[][] randomInts = {{1,0,0,0},{0,1,0,0},{0,6,1,0},{0,0,0,1}};
 		// requires permutation
-		//double[][] randomInts = { { 1, 2, -1, 0 }, { 2, 4, -2, -1 }, { 3, -5, 6, 1 }, { -1, 2, 8, -2 } };
+		double[][] randomInts = { { 1, 2, -1, 0 }, { 2, 4, -2, -1 }, { 3, -5, 6, 1 }, { -1, 2, 8, -2 } };
 
-		// Matrix A = new Matrix(randomInts);
-		// // A.inverse();
-		// Matrix B = new Matrix(A.row);
-		// // A.upper().printMatrix();
-		// A.printMatrix();
-		// A.inverse().printMatrix();
-		// B = A.mult(A.inverse());
-		// B.printMatrix();
+		Matrix A = new Matrix(randomInts);
+		// A.inverse();
+		Matrix B = new Matrix(A.row);
+		// A.upper().printMatrix();
+		A.printMatrix();
+		A.inverse().printMatrix();
+		B = A.mult(A.inverse());
+		B.printMatrix();
 
 		// double[][] arrA = {{2,2,2},{2,2,2}};
 		// double[][] arrB = {{2,3},{2,2},{2,2}};

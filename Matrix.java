@@ -183,7 +183,7 @@ public class Matrix {
 		}
 		for (int i = 0; i < this.row; i++) {
 			if (!this.validRow(i)){
-				System.out.println("INVALIDDD");
+				return null;
 			}
 		}
 		//divides the inverse matrix so all the pivots equal 1

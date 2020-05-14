@@ -313,7 +313,13 @@ public class App {
 							createMatrixArrays(false);
 
 							Matrix result = ((new Matrix(matrix1Arr)).inverse());
-							displayMatrix(result, 10, 40, "Result", true);
+							if(result==null) {
+								JLabel error = header("This matrix has no inverse.", 10, 50);
+								frame.add(error);
+							}
+							else {
+								displayMatrix(result, 10, 40, "Result", true);
+							}							
 						}
 					};
 					button.addActionListener(a);

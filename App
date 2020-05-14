@@ -13,11 +13,11 @@ public class App {
 		}
 	};
 	static JFrame frame = new JFrame("Linear Algebra");
-	static JLabel title, rowLabel, colLabel, scalLabel;
-	static JTextField rowTextfield, colTextfield, scalTextfield;
+	static JLabel title, rowLabel, colLabel, scalLabel, rowLabel2, colLabel2, scalLabel2;
+	static JTextField rowTextfield, colTextfield, scalTextfield, rowTextfield2, colTextfield2, scalTextfield2;
 	static ArrayList<JTextField> matrix1TextFields = new ArrayList<JTextField>();
 	static ArrayList<JTextField> matrix2TextFields = new ArrayList<JTextField>();
-	static int cols, rows;
+	static int cols, rows, cols2, rows2;
 	static double[][] matrix1Arr;
 	static double[][] matrix2Arr;
 	static JButton menu = button("Return to Menu", 432, 5, 150, 35);
@@ -69,7 +69,7 @@ public class App {
 				inverse();
 			}
 		};
-		
+
 		ActionListener det = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				determinant();
@@ -111,6 +111,9 @@ public class App {
 		}
 
 		displayRowAndColEntry(10, 50); // method creates input row and col text and the box with it
+		if (x == 2) {
+			displayRowAndColEntry2(210, 50);
+		}
 		JButton button = button("Submit", 10, 130, 150, 50);
 
 		// adding created buttons, text, and textfields to the window
@@ -125,54 +128,89 @@ public class App {
 				// boxes
 				rows = Integer.parseInt(rowTextfield.getText());
 				cols = Integer.parseInt(colTextfield.getText());
-				if(rows>7) {
-					frame.setSize(600, 260+20*(rows-7));
+
+				if (x == 2) {
+					rows2 = Integer.parseInt(rowTextfield2.getText());
+					cols2 = Integer.parseInt(colTextfield2.getText());
+				} else {
+					rows2 = cols;
 				}
-				clearFrame(); // clears the window
+				if (cols != rows2) {
+					clearFrame();
+					JLabel Error = header("Matrix 1's columns and matrix 2's rows must be the same.", 10, 185);
+					Error.setForeground(Color.red);
 
-				/// adds input matrix text and makes input boxes corresponding to the number of
-				/// cols and rows
-				displayInputMatrix(10, 50, 1);
-				displayInputMatrix(300, 50, 2);
+					displayRowAndColEntry(10, 50);
+					displayRowAndColEntry2(210, 50);
+					frame.add(button);
+					frame.add(title);
+					frame.add(menu);
+					frame.add(Error);
 
-				JButton button = button("Compute", 5, 5, 150, 35);
+				} else {
+					if (rows > 7) {
+						frame.setSize(600, 260 + 20 * (rows - 7));
+					}
+					clearFrame(); // clears the window
 
-				frame.add(button);
-				frame.add(title);
-				frame.add(menu);
-
-				ActionListener a = new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						createMatrixArrays(true); // creates a 2d int array and fills entries based on what was inputted
-													// in
-													// the boxes
-
-						// creates two matrix objects using the new arrays
-						Matrix matrix1 = new Matrix(matrix1Arr);
-						Matrix matrix2 = new Matrix(matrix2Arr);
-
-						Matrix result;
-						if (x == 0) {
-							result = matrix1.add(matrix2);
-						} else if (x == 1) {
-							result = matrix1.sub(matrix2);
-						} else {
-							result = matrix1.mult(matrix2);
-						}
-
-						clearFrame();
-						frame.add(title);
-						frame.add(menu);
-
-						displayMatrix(result, 10, 40, "Result", true); // method to display matrix on window with given
-																		// x and y
-
+					/// adds input matrix text and makes input boxes corresponding to the number of
+					/// cols and rows
+					displayInputMatrix(10, 50, 1);
+					if (x == 2) {
+						displayInputMatrix2(300, 50, 2);
+					} else {
+						displayInputMatrix(300, 50, 2);
 					}
 
-				};
+					JButton button = button("Compute", 5, 5, 150, 35);
 
-				button.addActionListener(a); // attaches second action event to the calculate button
+					frame.add(button);
+					frame.add(title);
+					frame.add(menu);
 
+					ActionListener a = new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							if(x==2) {
+								createMatrixArrays2();
+							}
+							else {
+								createMatrixArrays(true);
+							}
+							 		// creates a 2d int array and fills entries based on what was
+														// inputted
+														// in
+														// the boxes
+
+							// creates two matrix objects using the new arrays
+							Matrix matrix1 = new Matrix(matrix1Arr);
+							Matrix matrix2 = new Matrix(matrix2Arr);
+							matrix1.printMatrix();
+							matrix2.printMatrix();
+
+							Matrix result;
+							if (x == 0) {
+								result = matrix1.add(matrix2);
+							} else if (x == 1) {
+								result = matrix1.sub(matrix2);
+							} else {
+								result = matrix1.mult(matrix2);
+							}
+
+							clearFrame();
+							frame.add(title);
+							frame.add(menu);
+
+							displayMatrix(result, 10, 40, "Result", true); // method to display matrix on window with
+																			// given
+																			// x and y
+
+						}
+
+					};
+
+					button.addActionListener(a); // attaches second action event to the calculate button
+
+				}
 			}
 
 		};
@@ -185,7 +223,7 @@ public class App {
 		title = title("Scaler Multiplication", 200);
 		displayRowAndColEntry(10, 50);
 		JButton button = button("Submit", 10, 130, 150, 50);
-		
+
 		frame.add(button);
 		frame.add(title);
 		frame.add(menu);
@@ -194,8 +232,8 @@ public class App {
 			public void actionPerformed(ActionEvent e) {
 				rows = Integer.parseInt(rowTextfield.getText());
 				cols = Integer.parseInt(colTextfield.getText());
-				if(rows>7) {
-					frame.setSize(600, 260+20*(rows-7));
+				if (rows > 7) {
+					frame.setSize(600, 260 + 20 * (rows - 7));
 				}
 
 				clearFrame();
@@ -241,9 +279,9 @@ public class App {
 
 				if (rows != cols) {
 					clearFrame();
-					JLabel Error = header("Only square matrices can have an inverse", 10, 185);
+					JLabel Error = header("Only square matrices can have an inverse.", 10, 185);
 					Error.setForeground(Color.red);
-					
+
 					displayRowAndColEntry(10, 50);
 					frame.add(button);
 					frame.add(title);
@@ -251,9 +289,9 @@ public class App {
 					frame.add(Error);
 
 				} else {
-					
-					if(rows>7) {
-						frame.setSize(600, 260+20*(rows-7));
+
+					if (rows > 7) {
+						frame.setSize(600, 260 + 20 * (rows - 7));
 					}
 
 					clearFrame();
@@ -289,7 +327,7 @@ public class App {
 		frame.add(menu);
 		frame.add(title);
 	}
-	
+
 	public static void determinant() {
 		clearFrame();
 		title = title("Compute Determinant", 200);
@@ -306,7 +344,7 @@ public class App {
 					clearFrame();
 					JLabel Error = header("Only square matrices can have a determinant.", 10, 185);
 					Error.setForeground(Color.red);
-					
+
 					displayRowAndColEntry(10, 50);
 					frame.add(button);
 					frame.add(title);
@@ -314,9 +352,9 @@ public class App {
 					frame.add(Error);
 
 				} else {
-					
-					if(rows>7) {
-						frame.setSize(600, 260+20*(rows-7));
+
+					if (rows > 7) {
+						frame.setSize(600, 260 + 20 * (rows - 7));
 					}
 
 					clearFrame();
@@ -338,7 +376,7 @@ public class App {
 							createMatrixArrays(false);
 
 							double result = ((new Matrix(matrix1Arr)).determinant());
-							JLabel res= header(""+result, 10, 40);		
+							JLabel res = header("" + result, 10, 40);
 							frame.add(res);
 						}
 					};
@@ -373,7 +411,7 @@ public class App {
 	public static void displayRowAndColEntry(int x, int y) {
 		rowLabel = new JLabel("Input rows:");
 		rowLabel.setFont(new Font("Candara", 0, 15));
-		rowLabel.setBounds(x, y+4, 200, 20);
+		rowLabel.setBounds(x, y + 4, 200, 20);
 
 		rowTextfield = new JTextField("", 20);
 		rowTextfield.setFont(new Font("Times New Roman", 0, 15));
@@ -393,10 +431,33 @@ public class App {
 		frame.add(rowTextfield);
 	}
 
+	public static void displayRowAndColEntry2(int x, int y) {
+		rowLabel2 = new JLabel("Input rows:");
+		rowLabel2.setFont(new Font("Candara", 0, 15));
+		rowLabel2.setBounds(x, y + 4, 200, 20);
+
+		rowTextfield2 = new JTextField("", 20);
+		rowTextfield2.setFont(new Font("Times New Roman", 0, 15));
+		rowTextfield2.setBounds(x + 117, y + 2, 40, 25);
+
+		colLabel2 = new JLabel("Input columns:");
+		colLabel2.setFont(new Font("Candara", 0, 15));
+		colLabel2.setBounds(x, y + 45, 200, 20);
+
+		colTextfield2 = new JTextField("", 20);
+		colTextfield2.setFont(new Font("Times New Roman", 0, 15));
+		colTextfield2.setBounds(x + 117, y + 42, 40, 25);
+
+		frame.add(colLabel2);
+		frame.add(colTextfield2);
+		frame.add(rowLabel2);
+		frame.add(rowTextfield2);
+	}
+
 	public static void displayScalerInput(int x, int y) {
 		scalLabel = new JLabel("Input scaler:");
 		scalLabel.setFont(new Font("Candara", 0, 15));
-		scalLabel.setBounds(x, y+5, 200, 20);
+		scalLabel.setBounds(x, y + 5, 200, 20);
 
 		scalTextfield = new JTextField("", 20);
 		scalTextfield.setFont(new Font("Times New Roman", 0, 15));
@@ -419,9 +480,43 @@ public class App {
 		matrixTitle.setBounds(x, y, 100, 20);
 
 		y += 22;
-
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
+				JTextField tempTextField = new JTextField("", 20);
+				tempTextField.setFont(new Font("Times New Roman", 0, 15));
+				tempTextField.setBounds(x, y, 30, 20);
+				if (n == 1) {// value of n decides if this goes in to matrix1's field or matrix 2's
+					matrix1TextFields.add(tempTextField);
+				} else {
+					matrix2TextFields.add(tempTextField);
+				}
+
+				frame.add(tempTextField);
+				x += 30; // moves next box to the right
+			}
+			x = startx; // resets x value
+			y += 20; // moves next row of text boxes lower
+		}
+
+		frame.add(matrixTitle);
+
+	}
+
+	public static void displayInputMatrix2(int x, int y, int n) {// Creates a series of text boxes in the shape matrix
+		// with inputted rows and columns
+		int startx = x;
+		JLabel matrixTitle;
+		if (n == 0) {
+			matrixTitle = new JLabel("Input Matrix ");
+		} else {
+			matrixTitle = new JLabel("Input Matrix " + n);
+		}
+		matrixTitle.setFont(new Font("Candara", 0, 15));
+		matrixTitle.setBounds(x, y, 100, 20);
+
+		y += 22;
+		for (int i = 0; i < rows2; i++) {
+			for (int j = 0; j < cols2; j++) {
 				JTextField tempTextField = new JTextField("", 20);
 				tempTextField.setFont(new Font("Times New Roman", 0, 15));
 				tempTextField.setBounds(x, y, 30, 20);
@@ -469,6 +564,27 @@ public class App {
 		}
 	}
 
+	public static void createMatrixArrays2() {// Goes through array of textbox entrys and moves them
+		// into 2d arrays
+		int x = 0;
+		matrix1Arr = new double[rows][cols];
+		matrix2Arr = new double[rows2][cols2];
+
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				matrix1Arr[i][j] = Double.parseDouble(matrix1TextFields.get(x).getText());
+				x++;
+			}
+		}
+		x=0;
+		for (int i = 0; i < rows2; i++) {
+			for (int j = 0; j < cols2; j++) {
+				matrix2Arr[i][j] = Double.parseDouble(matrix2TextFields.get(x).getText());
+				x++;
+			}
+		}
+	}
+
 	public static void clearFrame() {
 		frame.getContentPane().removeAll();
 		frame.getContentPane().repaint();
@@ -492,6 +608,9 @@ public class App {
 			}
 			x = 10;
 			y += 40;
+		}
+		if (y > frame.getSize().height) {
+			frame.setSize(600, y + 20);
 		}
 	}
 
